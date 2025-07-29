@@ -14,15 +14,15 @@ export class OnDemandService {
   private readonly logger = new Logger(OnDemandService.name);
   private isProcessing = false;
   
-  private readonly KUSAMA_PARA_ID = 3344;
+  // private readonly KUSAMA_PARA_ID = 3344;
   private readonly POLKADOT_PARA_ID = 3417;
   private readonly PASEO_PARA_ID = 4607;
   
-  private readonly KUSAMA_AMOUNT = 0.005;
+  // private readonly KUSAMA_AMOUNT = 0.005;
   private readonly POLKADOT_AMOUNT = 0.025;
   private readonly PASEO_AMOUNT = 0.001;
   
-  private readonly KUSAMA_DECIMALS = 12;
+  // private readonly KUSAMA_DECIMALS = 12;
   private readonly POLKADOT_DECIMALS = 10;
   private readonly PASEO_DECIMALS = 10;
   
@@ -51,34 +51,34 @@ export class OnDemandService {
     this.isProcessing = true;
     try {
       // Fetch pending extrinsics using the ExtrinsicsService
-      const kusamaExtrinsics = await this.extrinsicsService.getPendingXodeKusama();
+      // const kusamaExtrinsics = await this.extrinsicsService.getPendingXodeKusama();
       const polkadotExtrinsics = await this.extrinsicsService.getPendingXodePolkadot();
   
       // Logging the extrinsics received from Kusama and Polkadot
-      this.logger.log(`📥 KUSAMA: Pending Extrinsics: ${JSON.stringify(kusamaExtrinsics)}`);
+      // this.logger.log(`📥 KUSAMA: Pending Extrinsics: ${JSON.stringify(kusamaExtrinsics)}`);
       this.logger.log(`📥 POLKADOT: Pending Extrinsics: ${JSON.stringify(polkadotExtrinsics)}`);
 
       // 🔍 Check if extrinsics already exist
-      const kusamaExists = kusamaExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(kusamaExtrinsics);
+      // const kusamaExists = kusamaExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(kusamaExtrinsics);
       const polkadotExists = polkadotExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(polkadotExtrinsics);
       
       // If either already exists, terminate the cycle early
-      if (kusamaExists || polkadotExists) {
+      if (polkadotExists) {
         this.logger.warn('⛔ Extrinsics already exist in DB. Skipping this cycle.');
         return;
       }
       
-      // 💾 Save new extrinsics to the database only if they are not empty
-      if (kusamaExtrinsics.length > 0) {
-        await this.extrinsicsService.saveExtrinsics(kusamaExtrinsics);
-      }
+      // // 💾 Save new extrinsics to the database only if they are not empty
+      // if (kusamaExtrinsics.length > 0) {
+      //   await this.extrinsicsService.saveExtrinsics(kusamaExtrinsics);
+      // }
       if (polkadotExtrinsics.length > 0) {
         await this.extrinsicsService.saveExtrinsics(polkadotExtrinsics);
       }
         
   
       // Convert amounts to smallest units
-      const kusamaAmountInSmallestUnit = this.convertToSmallestUnit(this.KUSAMA_AMOUNT, this.KUSAMA_DECIMALS);
+      // const kusamaAmountInSmallestUnit = this.convertToSmallestUnit(this.KUSAMA_AMOUNT, this.KUSAMA_DECIMALS);
       const polkadotAmountInSmallestUnit = this.convertToSmallestUnit(this.POLKADOT_AMOUNT, this.POLKADOT_DECIMALS);
       const paseoAmountInSmallestUnit = this.convertToSmallestUnit(this.PASEO_AMOUNT, this.PASEO_DECIMALS);
   
@@ -87,25 +87,25 @@ export class OnDemandService {
       const signer = keyring.addFromUri(process.env.MNEMONIC!);
   
       // Get the nonce for Kusama and Polkadot
-      const kusamaApi = await this.apiService.getKusamaApi();
+      // const kusamaApi = await this.apiService.getKusamaApi();
       const polkadotApi = await this.apiService.getPolkadotApi();
       const paseoApi = await this.apiService.getPaseoApi();
   
-      const { nonce: kusamaNonce } = await kusamaApi.query.system.account(signer.address) as any;
+      // const { nonce: kusamaNonce } = await kusamaApi.query.system.account(signer.address) as any;
       const { nonce: polkadotNonce } = await polkadotApi.query.system.account(signer.address) as any;
       const { nonce: paseoNonce } = await paseoApi.query.system.account(signer.address) as any;
   
       // Check Kusama extrinsics and place order if pending
-      if (kusamaExtrinsics.length > 0) {
-        this.logger.log('📥 Kusama has pending extrinsics. Placing order...');
-        const kusamaCall = kusamaApi.tx.onDemandAssignmentProvider.placeOrderAllowDeath(
-          kusamaAmountInSmallestUnit,
-          this.KUSAMA_PARA_ID
-        );
-        await this.sendTransaction(kusamaCall, signer, kusamaNonce, 'Xode Kusama', kusamaAmountInSmallestUnit, kusamaExtrinsics);
-      } else {
-        this.logger.log('📭 No pending extrinsics found on Kusama.');
-      }
+      // if (kusamaExtrinsics.length > 0) {
+      //   this.logger.log('📥 Kusama has pending extrinsics. Placing order...');
+      //   const kusamaCall = kusamaApi.tx.onDemandAssignmentProvider.placeOrderAllowDeath(
+      //     kusamaAmountInSmallestUnit,
+      //     this.KUSAMA_PARA_ID
+      //   );
+      //   await this.sendTransaction(kusamaCall, signer, kusamaNonce, 'Xode Kusama', kusamaAmountInSmallestUnit, kusamaExtrinsics);
+      // } else {
+      //   this.logger.log('📭 No pending extrinsics found on Kusama.');
+      // }
   
       // Check Polkadot extrinsics and place order if pending
       if (polkadotExtrinsics.length > 0) {
@@ -124,7 +124,7 @@ export class OnDemandService {
         paseoAmountInSmallestUnit,
         this.PASEO_PARA_ID
       );
-      await this.sendTransaction(paseoCall, signer, paseoNonce, 'Xode Paseo', paseoAmountInSmallestUnit, kusamaExtrinsics);
+      await this.sendTransaction(paseoCall, signer, paseoNonce, 'Xode Paseo', paseoAmountInSmallestUnit, []);
   
     } catch (error) {
       this.logger.error('❌ Error checking and placing order:', error);
@@ -138,9 +138,9 @@ export class OnDemandService {
   // Helper function to send transactions and handle errors gracefully
   private async sendTransaction(call, signer, nonce, chain: string, amount: number, extrinsics: any): Promise<void> {
     try {
-      const signedExtrinsic = await call.signAsync(signer, { nonce });
+      // const signedExtrinsic = await call.signAsync(signer, { nonce });
 
-      await signedExtrinsic.send(async ({ status }) => {
+      await call.signAndSend(signer, { nonce }, async ({ status }) => {
         try {
           if (status.isFinalized) {
             const blockhash = status.asFinalized.toHex();
@@ -187,7 +187,7 @@ export class OnDemandService {
       } catch (error) {
         this.logger.error('❌ Error placing order:', error);
       } finally {
-        setTimeout(runCycle, 6000); // Wait 12 seconds after completion
+        setTimeout(runCycle, 6000); // Wait 6 seconds after completion
       }
     };
   
