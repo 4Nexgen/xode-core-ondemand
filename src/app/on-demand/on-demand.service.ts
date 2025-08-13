@@ -63,10 +63,10 @@ export class OnDemandService {
       const polkadotExists = polkadotExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(polkadotExtrinsics);
       
       // If either already exists, terminate the cycle early
-      // if (polkadotExists) {
-      //   this.logger.warn('⛔ Extrinsics already exist in DB. Skipping this cycle.');
-      //   return;
-      // }
+      if (polkadotExists) {
+        this.logger.warn('⛔ Extrinsics already exist in DB. Skipping this cycle.');
+        return;
+      }
       
       // // 💾 Save new extrinsics to the database only if they are not empty
       // if (kusamaExtrinsics.length > 0) {
