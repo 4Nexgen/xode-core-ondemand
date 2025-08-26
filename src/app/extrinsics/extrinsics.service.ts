@@ -12,17 +12,17 @@ export class ExtrinsicsService {
     private readonly extrinsicsRepository: Repository<ExtrinsicsEntity>,
   ) {}
 
-  async getPendingXodeKusama(): Promise<any[]> {
-    const api = await this.apiService.getXodeKusamaApi();
-    const extrinsics = await api.rpc.author.pendingExtrinsics();
-    return extrinsics.map(ext => ext.toHuman());
-  }
+  // async getPendingXodeKusama(): Promise<any[]> {
+  //   const api = await this.apiService.getXodeKusamaApi();
+  //   const extrinsics = await api.rpc.author.pendingExtrinsics();
+  //   return extrinsics.map(ext => ext.toHuman());
+  // }
 
-  async getPendingXodePolkadot(): Promise<any[]> {
-    const api = await this.apiService.getXodePolkadotApi();
-    const extrinsics = await api.rpc.author.pendingExtrinsics();
-    return extrinsics.map(ext => ext.toHuman());
-  }
+  // async getPendingXodePolkadot(): Promise<any[]> {
+  //   const api = await this.apiService.getXodePolkadotApi();
+  //   const extrinsics = await api.rpc.author.pendingExtrinsics();
+  //   return extrinsics.map(ext => ext.toHuman());
+  // }
 
   // Save extrinsics to the database
   async saveExtrinsics(extrinsics: any[]): Promise<void> {

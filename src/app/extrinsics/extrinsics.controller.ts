@@ -7,17 +7,17 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class ExtrinsicsController {
   constructor(private readonly extrinsicsService: ExtrinsicsService) {}
 
-  @Get('kusama')
-  @ApiOperation({ summary: 'Get pending extrinsics from Xode Kusama RPC' })
-  @ApiResponse({ status: 200, description: 'List of pending extrinsics from Kusama' })
-  async getXodeKusamaExtrinsics() {
-    return await this.extrinsicsService.getPendingXodeKusama();
-  }
+  // @Get('kusama')
+  // @ApiOperation({ summary: 'Get pending extrinsics from Xode Kusama RPC' })
+  // @ApiResponse({ status: 200, description: 'List of pending extrinsics from Kusama' })
+  // async getXodeKusamaExtrinsics() {
+  //   return await this.extrinsicsService.getPendingXodeKusama();
+  // }
 
-  @Get('polkadot')
-  @ApiOperation({ summary: 'Get pending extrinsics from Xode Polkadot RPC' })
-  @ApiResponse({ status: 200, description: 'List of pending extrinsics from Polkadot' })
-  async getXodePolkadotExtrinsics() {
-    return await this.extrinsicsService.getPendingXodePolkadot();
-  }
+  // @Get('polkadot')
+  // @ApiOperation({ summary: 'Get pending extrinsics from Xode Polkadot RPC' })
+  // @ApiResponse({ status: 200, description: 'List of pending extrinsics from Polkadot' })
+  // async getXodePolkadotExtrinsics() {
+  //   return await this.extrinsicsService.getPendingXodePolkadot();
+  // }
 }

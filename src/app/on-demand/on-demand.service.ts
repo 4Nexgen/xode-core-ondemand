@@ -15,15 +15,15 @@ export class OnDemandService {
   private isProcessing = false;
   
   // private readonly KUSAMA_PARA_ID = 3344;
-  private readonly POLKADOT_PARA_ID = 3417;
+  // private readonly POLKADOT_PARA_ID = 3417;
   private readonly PASEO_PARA_ID = 4607;
   
   // private readonly KUSAMA_AMOUNT = 0.005;
-  private readonly POLKADOT_AMOUNT = 0.025;
+  // private readonly POLKADOT_AMOUNT = 0.025;
   private readonly PASEO_AMOUNT = 0.001;
   
   // private readonly KUSAMA_DECIMALS = 12;
-  private readonly POLKADOT_DECIMALS = 10;
+  // private readonly POLKADOT_DECIMALS = 10;
   private readonly PASEO_DECIMALS = 10;
   
   constructor(
@@ -52,34 +52,34 @@ export class OnDemandService {
     try {
       // Fetch pending extrinsics using the ExtrinsicsService
       // const kusamaExtrinsics = await this.extrinsicsService.getPendingXodeKusama();
-      const polkadotExtrinsics = await this.extrinsicsService.getPendingXodePolkadot();
+      // const polkadotExtrinsics = await this.extrinsicsService.getPendingXodePolkadot();
   
       // Logging the extrinsics received from Kusama and Polkadot
       // this.logger.log(`📥 KUSAMA: Pending Extrinsics: ${JSON.stringify(kusamaExtrinsics)}`);
-      this.logger.log(`📥 POLKADOT: Pending Extrinsics: ${JSON.stringify(polkadotExtrinsics)}`);
+      // this.logger.log(`📥 POLKADOT: Pending Extrinsics: ${JSON.stringify(polkadotExtrinsics)}`);
 
       // 🔍 Check if extrinsics already exist
       // const kusamaExists = kusamaExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(kusamaExtrinsics);
-      const polkadotExists = polkadotExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(polkadotExtrinsics);
+      // const polkadotExists = polkadotExtrinsics.length > 0 && await this.extrinsicsService.ifExtrinsicsExist(polkadotExtrinsics);
       
       // If either already exists, terminate the cycle early
-      if (polkadotExists) {
-        this.logger.warn('⛔ Extrinsics already exist in DB. Skipping this cycle.');
-        return;
-      }
+      // if (polkadotExists) {
+      //   this.logger.warn('⛔ Extrinsics already exist in DB. Skipping this cycle.');
+      //   return;
+      // }
       
       // // 💾 Save new extrinsics to the database only if they are not empty
       // if (kusamaExtrinsics.length > 0) {
       //   await this.extrinsicsService.saveExtrinsics(kusamaExtrinsics);
       // }
-      if (polkadotExtrinsics.length > 0) {
-        await this.extrinsicsService.saveExtrinsics(polkadotExtrinsics);
-      }
+      // if (polkadotExtrinsics.length > 0) {
+      //   await this.extrinsicsService.saveExtrinsics(polkadotExtrinsics);
+      // }
         
   
       // Convert amounts to smallest units
       // const kusamaAmountInSmallestUnit = this.convertToSmallestUnit(this.KUSAMA_AMOUNT, this.KUSAMA_DECIMALS);
-      const polkadotAmountInSmallestUnit = this.convertToSmallestUnit(this.POLKADOT_AMOUNT, this.POLKADOT_DECIMALS);
+      // const polkadotAmountInSmallestUnit = this.convertToSmallestUnit(this.POLKADOT_AMOUNT, this.POLKADOT_DECIMALS);
       const paseoAmountInSmallestUnit = this.convertToSmallestUnit(this.PASEO_AMOUNT, this.PASEO_DECIMALS);
   
       // Prepare signer using mnemonic
@@ -88,11 +88,11 @@ export class OnDemandService {
   
       // Get the nonce for Kusama and Polkadot
       // const kusamaApi = await this.apiService.getKusamaApi();
-      const polkadotApi = await this.apiService.getPolkadotApi();
+      // const polkadotApi = await this.apiService.getPolkadotApi();
       const paseoApi = await this.apiService.getPaseoApi();
   
       // const { nonce: kusamaNonce } = await kusamaApi.query.system.account(signer.address) as any;
-      const { nonce: polkadotNonce } = await polkadotApi.query.system.account(signer.address) as any;
+      // const { nonce: polkadotNonce } = await polkadotApi.query.system.account(signer.address) as any;
       const { nonce: paseoNonce } = await paseoApi.query.system.account(signer.address) as any;
   
       // Check Kusama extrinsics and place order if pending
@@ -108,16 +108,16 @@ export class OnDemandService {
       // }
   
       // Check Polkadot extrinsics and place order if pending
-      if (polkadotExtrinsics.length > 0) {
-        this.logger.log('📥 Polkadot has pending extrinsics. Placing order...');
-        const polkadotCall = polkadotApi.tx.onDemand.placeOrderAllowDeath(
-          polkadotAmountInSmallestUnit,
-          this.POLKADOT_PARA_ID
-        );
-        await this.sendTransaction(polkadotCall, signer, polkadotNonce, 'Xode Polkadot', polkadotAmountInSmallestUnit, polkadotExtrinsics);
-      } else {
-        this.logger.log('📭 No pending extrinsics found on Polkadot.');
-      }
+      // if (polkadotExtrinsics.length > 0) {
+      //   this.logger.log('📥 Polkadot has pending extrinsics. Placing order...');
+      //   const polkadotCall = polkadotApi.tx.onDemand.placeOrderAllowDeath(
+      //     polkadotAmountInSmallestUnit,
+      //     this.POLKADOT_PARA_ID
+      //   );
+      //   await this.sendTransaction(polkadotCall, signer, polkadotNonce, 'Xode Polkadot', polkadotAmountInSmallestUnit, polkadotExtrinsics);
+      // } else {
+      //   this.logger.log('📭 No pending extrinsics found on Polkadot.');
+      // }
   
       // Proceed with Paseo transaction (this can remain unconditional as it's separate)
       const paseoCall = paseoApi.tx.onDemand.placeOrderAllowDeath(
